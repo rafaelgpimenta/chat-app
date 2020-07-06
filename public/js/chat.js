@@ -8,6 +8,7 @@ const $messages = document.getElementById('messages');
 
 const messageTemplate = document.getElementById('message-template').innerHTML;
 const locationMessageTemplate = document.getElementById('location-message-template').innerHTML;
+const sidebarTemplate = document.getElementById('sidebar-template').innerHTML;
 
 const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true });
 
@@ -28,6 +29,15 @@ socket.on('message', message => {
   });
   $messages.insertAdjacentHTML('beforeend', html);
 });
+
+socket.on('roomData', ({ room, users }) => {
+  const html = Mustache.render(sidebarTemplate, {
+    room,
+    users,
+  });
+  const $sidebar = document.getElementById('sidebar');
+  $sidebar.innerHTML = html;
+})
 
 $messageForm.addEventListener('submit', e => {
   e.preventDefault();
